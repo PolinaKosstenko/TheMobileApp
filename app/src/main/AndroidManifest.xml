@@ -14,13 +14,9 @@
         android:theme="@style/Theme.Helloworld"
         tools:targetApi="31">
         <activity
-            android:name=".HelloWorld"
-            android:label="Hello world"
+            android:name=".Login"
             android:exported="true"
-            android:theme="@style/Theme.Helloworld">
-
-        </activity>
-
+            android:theme="@style/Theme.Helloworld"/>
         <activity
             android:name=".WelcomeScreen"
             android:exported="true"
