@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 
 class Login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true) // Активация кнопки "Назад" в ActionBar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true) // Активация кнопки "Назад" в ActionBar - шапка
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
         setContentView(R.layout.activity_login)
@@ -28,6 +28,6 @@ class Login : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean { //функция вызывается при нажатии на кнопку Назад в шапке
         finish() // Закрываем Activity
-        return true //зачем то возвращаем
+        return true //зачем то возвращаем?????
     }
 }

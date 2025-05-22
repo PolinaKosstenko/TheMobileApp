@@ -17,16 +17,16 @@ import com.google.android.material.textfield.TextInputLayout
 
 class Registration : AppCompatActivity(R.layout.activity_registration) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) { //при создании активности
         super.onCreate(savedInstanceState)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true) //добавление кнопку "назад" в экшен бар
 
         val editText = findViewById<TextInputLayout>(R.id.loginInputLayout)
-        val button = findViewById<Button>(R.id.bthButton)
+        val button = findViewById<Button>(R.id.bthButton) //берем по айдишникам
 
         button.setOnClickListener {
             val intent = Intent(this, WelcomeScreen::class.java)
-            startActivity(intent)
+            startActivity(intent)  //переходим на главный экран
         }
 
         setupPrivacyPolicyText()
@@ -36,15 +36,15 @@ class Registration : AppCompatActivity(R.layout.activity_registration) {
         val privacyTextView = findViewById<TextView>(R.id.termsTextView)
         val fullText = "Нажимая на кнопку, вы соглашаетесь с политикой конфиденциальности и обработки персональных данных, а также принимаете пользовательское соглашение"
 
-        val spannableString = SpannableString(fullText)
+        val spannableString = SpannableString(fullText) //SpannableString чтобы менять поведение частей текста
 
 
         val privacyText = "политикой конфиденциальности"
         val privacyStart = fullText.indexOf(privacyText)
         val privacyEnd = privacyStart + privacyText.length
 
-        spannableString.setSpan(
-            object : ClickableSpan() {
+        spannableString.setSpan(  //делает этот фрагмент кликабельным
+            object : ClickableSpan() { //показывает Toast при клике
                 override fun onClick(widget: View) {
                     Toast.makeText(
                         this@Registration,
@@ -91,7 +91,7 @@ class Registration : AppCompatActivity(R.layout.activity_registration) {
         privacyTextView.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    override fun onSupportNavigateUp(): Boolean {
+    override fun onSupportNavigateUp(): Boolean { //кнопка назад в шапке, закрываем текущую активность если нажмем
         finish()
         return true
     }
