@@ -14,14 +14,14 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
         setContentView(R.layout.activity_login)
-        //ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-        //    val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        //    v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-        //    insets
-        //}
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+//            v.setPadding(0, systemBars.bottom, 0, 0)
+//            insets
+//        }
         val button = findViewById<Button>(R.id.bthButton)
         button.setOnClickListener {
-            val intent = Intent(this, WelcomeScreen::class.java)
+            val intent = Intent(this, Activity_Emptystate::class.java)
             startActivity(intent)
         }
     }
