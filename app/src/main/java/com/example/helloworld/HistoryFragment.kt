@@ -46,6 +46,7 @@ class HistoryItemSpacingDecoration(private val spaceHeight: Int) : RecyclerView.
 }
 
 class HistoryFragment(val type: String) : Fragment() {
+    private lateinit var viewModel: ActivityViewModel
     private lateinit var dataSet: MutableMap<String, ArrayList<HistoryListData>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +60,7 @@ class HistoryFragment(val type: String) : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_history, container, false)
 
+        val onClick = { data: Bundle ->
         requireActivity().supportFragmentManager.setFragmentResult(
             "showDetails",
             data
@@ -70,10 +72,10 @@ class HistoryFragment(val type: String) : Fragment() {
                     "Позавчера",
                     arrayListOf(
                         HistoryListItemData(
-                    "14.32 км",
+                            "14.32 км",
                             "@van_darkholme",
                             "02-46",
-                    "Серфинг",
+                            "Серфинг",
                             "14",
                             onClick
                         ),
@@ -83,10 +85,10 @@ class HistoryFragment(val type: String) : Fragment() {
                     "Вчера",
                     arrayListOf(
                         HistoryListItemData(
-                    "14.32 км",
-                    "@van_darkholme",
+                            "14.32 км",
+                            "@van_darkholme",
                             "02-46",
-                    "Серфинг",
+                            "Серфинг",
                             "14",
                             onClick
                         ),
@@ -104,22 +106,22 @@ class HistoryFragment(val type: String) : Fragment() {
                     "Сегодня",
                     arrayListOf(
                         HistoryListItemData(
-                    "228 м",
-                    "@techniquepasha",
+                            "228 м",
+                            "@techniquepasha",
                             "14-48",
-                    "Качели",
+                            "Качели",
                             "14",
                             onClick
                         ),
                         HistoryListItemData(
-                    "10 км",
-                    "@morgen_shtern",
+                            "10 км",
+                            "@morgen_shtern",
                             "01-10",
-                    "Езда на кадилак",
+                            "Езда на кадилак",
                             "14",
                             onClick
                         )
-            )
+                    )
                 ),
             ),
             "Мои" to arrayListOf()
@@ -134,6 +136,70 @@ class HistoryFragment(val type: String) : Fragment() {
         recyclerView.addItemDecoration(HistoryItemSpacingDecoration(spacingInPixels))
 
         recyclerView.adapter = customAdapter
+
+        if (type == "Мои") {
+            viewModel = ViewModelProvider(
+                this,
+                ViewModelProvider.AndroidViewModelFactory.getInstance(activity?.application ?: Application())
+            )[ActivityViewModel::class.java]
+
+            viewModel.allActivities.observe(viewLifecycleOwner) { list ->
+                val distBetween = {
+                        point1: Coordinate, point2: Coordinate ->
+                    acos(
+                        sin(point1.latitude) * sin(point2.latitude) +
+                                cos(point1.latitude) * cos(point2.latitude) * cos(
+                            point2.longitude - point1.longitude
+                        )) * 6371
+                }
+
+                if (list.size > 0) {
+                    var myDataSet: ArrayList<HistoryListData> = arrayListOf()
+                    val time = LocalDateTime.now()
+
+                    list?.let {
+                        for (v in list) {
+                            var dist = 0f
+                            for (i in 0 until v.coorinates.size - 1)
+                                dist += distBetween(v.coorinates[i], v.coorinates[i + 1])
+
+
+                            val item = HistoryListItemData(
+                                distance = "${dist} км",
+                                username = "",
+                                duration = "${v.startTime?.until(v.endTime, ChronoUnit.MINUTES)} минут",
+                                type = activityTypeToString[v.type].toString(),
+                                date = DateTimeFormatter.ofPattern("HH:mm:ss").format(v.startTime),
+                                onClick
+                            )
+
+                            var t = v.endTime?.toLocalDate().toString()
+                            val until = v.endTime?.until(time, ChronoUnit.DAYS) ?: 3
+                            if (until.toInt() == 0)
+                                t = "Сегодня"
+                            if (until.toInt() == 1)
+                                t = "Вчера"
+
+                            val i = myDataSet.find({ i -> i.time == t })
+                            if (i != null) i.childrenData.add(item)
+                            else myDataSet.add(HistoryListData(
+                                t,
+                                arrayListOf(item)
+                            ))
+                        }
+
+                        for (l in myDataSet) {
+                            l.childrenData.sortWith(Comparator {
+                                i1: HistoryListItemData, i2: HistoryListItemData ->
+                                    i1.date.compareTo(i2.date)
+                            })
+                        }
+
+                        customAdapter.update(myDataSet)
+                    }
+                }
+            }
+        }
 
         val addActivityButton: FloatingActionButton = view.findViewById(R.id.floatingActionButton)
         addActivityButton.setOnClickListener {
