@@ -74,9 +74,9 @@ class HistoryFragment(val type: String) : Fragment() {
                         HistoryListItemData(
                             "14.32 км",
                             "@van_darkholme",
-                            "02-46",
+                            "2 минут",
                             "Серфинг",
-                            "14",
+                            "01:30:22",
                             onClick
                         ),
                     )
@@ -87,17 +87,17 @@ class HistoryFragment(val type: String) : Fragment() {
                         HistoryListItemData(
                             "14.32 км",
                             "@van_darkholme",
-                            "02-46",
+                            "15 минут",
                             "Серфинг",
-                            "14",
+                            "14:00:00",
                             onClick
                         ),
                         HistoryListItemData(
                             "228 м",
                             "@techniquepasha",
-                            "14-48",
+                            "48 минут",
                             "Качели",
-                            "14",
+                            "11:23:00",
                             onClick
                         ),
                     )
@@ -108,17 +108,17 @@ class HistoryFragment(val type: String) : Fragment() {
                         HistoryListItemData(
                             "228 м",
                             "@techniquepasha",
-                            "14-48",
+                            "14 минут",
                             "Качели",
-                            "14",
+                            "09:32:00",
                             onClick
                         ),
                         HistoryListItemData(
                             "10 км",
                             "@morgen_shtern",
-                            "01-10",
+                            "1 минут",
                             "Езда на кадилак",
-                            "14",
+                            "07:01:00",
                             onClick
                         )
                     )
