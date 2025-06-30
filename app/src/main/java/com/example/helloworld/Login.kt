@@ -3,10 +3,7 @@ package com.example.helloworld
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class Login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +16,7 @@ class Login : AppCompatActivity() {
 //            v.setPadding(0, systemBars.bottom, 0, 0)
 //            insets
 //        }
-        val button = findViewById<Button>(R.id.bthButton)
+        val button = findViewById<Button>(R.id.resetButton)
         button.setOnClickListener {
             val intent = Intent(this, Activity_Emptystate::class.java)
             startActivity(intent)

@@ -22,7 +22,7 @@ class Registration : AppCompatActivity(R.layout.activity_registration) {
         supportActionBar?.setDisplayHomeAsUpEnabled(true) //добавление кнопку "назад" в экшен бар
 
         val editText = findViewById<TextInputLayout>(R.id.loginInputLayout)
-        val button = findViewById<Button>(R.id.bthButton) //берем по айдишникам
+        val button = findViewById<Button>(R.id.resetButton) //берем по айдишникам
 
         button.setOnClickListener {
             val intent = Intent(this, WelcomeScreen::class.java)

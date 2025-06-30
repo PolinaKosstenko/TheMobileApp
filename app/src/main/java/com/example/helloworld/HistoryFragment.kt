@@ -1,123 +1,145 @@
 package com.example.helloworld
 
+import android.app.Application
+import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.helloworld.data.model.ActivityViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.text.SimpleDateFormat
-import java.util.Date
+import kotlin.collections.get
+import kotlin.compareTo
+import com.example.helloworld.data.model.Coordinate
+import java.time.LocalDate
+import kotlin.math.*
+import com.example.helloworld.HistoryFragment
+import com.example.helloworld.data.model.ActivityType
+import com.example.helloworld.data.model.activityTypeToString
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.Collections
 
-data class HistoryListData(
-    val distance: String,
-    val username: String,
-    val duration: Date,
-    val type: String,
-    val date: Date
-)
-
-
-class HistoryListAdapter(private val dataSet: Array<HistoryListData>) :
-    RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
-
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder)
-     */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        // Define click listener for the ViewHolder's View
-        val distance: TextView = view.findViewById(R.id.distance)
-        val username: TextView = view.findViewById(R.id.username)
-        val duration: TextView = view.findViewById(R.id.duration)
-        val type: TextView = view.findViewById(R.id.type)
-        val date: TextView = view.findViewById(R.id.date)
+class HistoryItemSpacingDecoration(private val spaceHeight: Int) : RecyclerView.ItemDecoration() {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
+        with(outRect) {
+            bottom = spaceHeight
+//            if (parent.getChildAdapterPosition(view) == 0) {
+//                top = spaceHeight
+//            }
+        }
     }
-
-    // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        // Create a new view, which defines the UI of the list item
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.activity_list_item, viewGroup, false)
-
-        return ViewHolder(view)
-    }
-
-    // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-        viewHolder.distance.text = dataSet[position].distance
-        viewHolder.username.text = dataSet[position].username
-        viewHolder.duration.text = dataSet[position].duration.toString()
-        viewHolder.type.text = dataSet[position].type
-        viewHolder.date.text = dataSet[position].date.toString()
-    }
-
-    // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = dataSet.size
-
 }
 
 class HistoryFragment(val type: String) : Fragment() {
+    private lateinit var dataSet: MutableMap<String, ArrayList<HistoryListData>>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_history, container, false)
 
-        val dataset = mapOf(
-            "Мои" to arrayOf(
+        requireActivity().supportFragmentManager.setFragmentResult(
+            "showDetails",
+            data
+        )}
+
+        dataSet = mutableMapOf(
+            "Пользователей" to arrayListOf(
                 HistoryListData(
+                    "Позавчера",
+                    arrayListOf(
+                        HistoryListItemData(
                     "14.32 км",
-                    "",
-                    SimpleDateFormat("hh-mm").parse("02-46"),
+                            "@van_darkholme",
+                            "02-46",
                     "Серфинг",
-                    SimpleDateFormat("hh").parse("14")),
+                            "14",
+                            onClick
+                        ),
+                    )
+                ),
                 HistoryListData(
-                    "1000 м",
-                    "",
-                    SimpleDateFormat("mm").parse("60"),
-                    "Велосипед",
-                    SimpleDateFormat("dd.mm.yyyy").parse("29.05.2022")),
-            ),
-            "Пользователей" to arrayOf(
-                HistoryListData(
+                    "Вчера",
+                    arrayListOf(
+                        HistoryListItemData(
                     "14.32 км",
                     "@van_darkholme",
-                    SimpleDateFormat("hh-mm").parse("02-46"),
+                            "02-46",
                     "Серфинг",
-                    SimpleDateFormat("hh").parse("14")),
+                            "14",
+                            onClick
+                        ),
+                        HistoryListItemData(
+                            "228 м",
+                            "@techniquepasha",
+                            "14-48",
+                            "Качели",
+                            "14",
+                            onClick
+                        ),
+                    )
+                ),
                 HistoryListData(
+                    "Сегодня",
+                    arrayListOf(
+                        HistoryListItemData(
                     "228 м",
                     "@techniquepasha",
-                    SimpleDateFormat("hh-mm").parse("14-48"),
+                            "14-48",
                     "Качели",
-                    SimpleDateFormat("hh").parse("14")),
-                HistoryListData(
+                            "14",
+                            onClick
+                        ),
+                        HistoryListItemData(
                     "10 км",
                     "@morgen_shtern",
-                    SimpleDateFormat("hh-mm").parse("01-10"),
+                            "01-10",
                     "Езда на кадилак",
-                    SimpleDateFormat("hh").parse("14"))
+                            "14",
+                            onClick
+                        )
             )
+                ),
+            ),
+            "Мои" to arrayListOf()
         )
 
-        val customAdapter = HistoryListAdapter(dataset[type] ?: arrayOf())
-
+        val customAdapter = HistoryListDataAdapter(dataSet[type] ?: arrayListOf())
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
-        recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         recyclerView.layoutManager = LinearLayoutManager(view.context)
+
+        // Установка отступа между элементами (16dp)
+        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.fab_margin)
+        recyclerView.addItemDecoration(HistoryItemSpacingDecoration(spacingInPixels))
+
         recyclerView.adapter = customAdapter
+
+        val addActivityButton: FloatingActionButton = view.findViewById(R.id.floatingActionButton)
+        addActivityButton.setOnClickListener {
+            val intent = Intent(activity, AddActivity::class.java)
+            startActivity(intent)
+        }
 
         return view
     }

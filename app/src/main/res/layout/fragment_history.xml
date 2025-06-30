@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HistoryFragment"
-    >
+    android:paddingRight="16px"
+    tools:context=".HistoryFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="24px"
+        android:clickable="true"
+        android:src="@android:drawable/ic_media_play"
+        android:tint="@color/white"
+        card_view:backgroundTint="#FF6200EE" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="recycler" />
+        android:contentDescription="recycler"
+
+        android:paddingHorizontal="0dp"
+        card_view:cardCornerRadius="16dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 </FrameLayout>
